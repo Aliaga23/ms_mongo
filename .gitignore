@@ -1,0 +1,70 @@
+# Binarios
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Archivos de test
+*.test
+
+# Archivos de output
+*.out
+
+# Dependencias de vendor
+vendor/
+
+# Archivos de configuración local
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+*.log
+logs/
+
+# Archivos temporales del sistema
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Archivos de build
+build/
+dist/
+
+# Archivos de coverage
+*.cover
+coverage.html
+coverage.out
+
+# Archivos de Go
+# go.work puede ser añadido si es necesario para el proyecto
+go.work
+
+# Archivos específicos del proyecto
+*.db
+*.sqlite
+*.sqlite3
+
+# Archivos de documentación generados
+docs/
+*.pdf
+
+# Archivos de certificados y claves
+*.key
+*.pem
+*.crt
+*.p12
