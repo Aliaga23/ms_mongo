@@ -16,14 +16,12 @@ type usuarioRepository struct {
 	collection *mongo.Collection
 }
 
-// NewUsuarioRepository crea una nueva instancia del repositorio de usuarios
 func NewUsuarioRepository(db *mongo.Database) UsuarioRepository {
 	return &usuarioRepository{
 		collection: db.Collection("usuarios"),
 	}
 }
 
-// Create crea un nuevo usuario
 func (r *usuarioRepository) Create(ctx context.Context, usuario *entity.Usuario) error {
 	if usuario.ID.IsZero() {
 		usuario.ID = primitive.NewObjectID()
@@ -36,7 +34,6 @@ func (r *usuarioRepository) Create(ctx context.Context, usuario *entity.Usuario)
 	return err
 }
 
-// GetByID obtiene un usuario por ID
 func (r *usuarioRepository) GetByID(ctx context.Context, id primitive.ObjectID) (*entity.Usuario, error) {
 	var usuario entity.Usuario
 	err := r.collection.FindOne(ctx, bson.M{"_id": id}).Decode(&usuario)
@@ -49,7 +46,6 @@ func (r *usuarioRepository) GetByID(ctx context.Context, id primitive.ObjectID) 
 	return &usuario, nil
 }
 
-// GetByEmail obtiene un usuario por email
 func (r *usuarioRepository) GetByEmail(ctx context.Context, email string) (*entity.Usuario, error) {
 	var usuario entity.Usuario
 	err := r.collection.FindOne(ctx, bson.M{"email": email}).Decode(&usuario)
@@ -62,7 +58,6 @@ func (r *usuarioRepository) GetByEmail(ctx context.Context, email string) (*enti
 	return &usuario, nil
 }
 
-// GetAll obtiene todos los usuarios con filtros, límite y offset
 func (r *usuarioRepository) GetAll(ctx context.Context, filters map[string]interface{}, limit, offset int) ([]*entity.Usuario, error) {
 	filter := bson.M{}
 	for k, v := range filters {
@@ -92,7 +87,6 @@ func (r *usuarioRepository) GetAll(ctx context.Context, filters map[string]inter
 	return usuarios, cursor.Err()
 }
 
-// Update actualiza un usuario
 func (r *usuarioRepository) Update(ctx context.Context, id primitive.ObjectID, updates map[string]interface{}) error {
 	filter := bson.M{"_id": id}
 	update := bson.M{"$set": updates}
@@ -109,7 +103,6 @@ func (r *usuarioRepository) Update(ctx context.Context, id primitive.ObjectID, u
 	return nil
 }
 
-// Delete elimina un usuario (soft delete)
 func (r *usuarioRepository) Delete(ctx context.Context, id primitive.ObjectID) error {
 	filter := bson.M{"_id": id}
 	update := bson.M{"$set": bson.M{"estado": false}}
@@ -126,7 +119,6 @@ func (r *usuarioRepository) Delete(ctx context.Context, id primitive.ObjectID) e
 	return nil
 }
 
-// Search busca usuarios por nombre o email
 func (r *usuarioRepository) Search(ctx context.Context, query string, limit, offset int) ([]*entity.Usuario, error) {
 	filter := bson.M{
 		"$or": []bson.M{
@@ -158,7 +150,6 @@ func (r *usuarioRepository) Search(ctx context.Context, query string, limit, off
 	return usuarios, cursor.Err()
 }
 
-// Count cuenta usuarios con filtros
 func (r *usuarioRepository) Count(ctx context.Context, filters map[string]interface{}) (int64, error) {
 	filter := bson.M{}
 	for k, v := range filters {
@@ -168,7 +159,6 @@ func (r *usuarioRepository) Count(ctx context.Context, filters map[string]interf
 	return r.collection.CountDocuments(ctx, filter)
 }
 
-// EmailExists verifica si un email ya existe
 func (r *usuarioRepository) EmailExists(ctx context.Context, email string, excludeID ...primitive.ObjectID) (bool, error) {
 	filter := bson.M{"email": email}
 

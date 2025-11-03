@@ -16,14 +16,12 @@ type suscripcionRepository struct {
 	collection *mongo.Collection
 }
 
-// NewSuscripcionRepository crea una nueva instancia del repositorio de suscripciones
 func NewSuscripcionRepository(db *mongo.Database) SuscripcionRepository {
 	return &suscripcionRepository{
 		collection: db.Collection("suscripciones"),
 	}
 }
 
-// Create crea una nueva suscripción
 func (r *suscripcionRepository) Create(ctx context.Context, suscripcion *entity.Suscripcion) error {
 	if suscripcion.ID.IsZero() {
 		suscripcion.ID = primitive.NewObjectID()
@@ -36,7 +34,6 @@ func (r *suscripcionRepository) Create(ctx context.Context, suscripcion *entity.
 	return err
 }
 
-// GetByID obtiene una suscripción por ID
 func (r *suscripcionRepository) GetByID(ctx context.Context, id primitive.ObjectID) (*entity.Suscripcion, error) {
 	var suscripcion entity.Suscripcion
 	err := r.collection.FindOne(ctx, bson.M{"_id": id}).Decode(&suscripcion)
@@ -49,7 +46,6 @@ func (r *suscripcionRepository) GetByID(ctx context.Context, id primitive.Object
 	return &suscripcion, nil
 }
 
-// GetByUserID obtiene todas las suscripciones de un usuario
 func (r *suscripcionRepository) GetByUserID(ctx context.Context, userID primitive.ObjectID, limit, offset int) ([]*entity.Suscripcion, error) {
 	filter := bson.M{"usuario_id": userID}
 
@@ -76,7 +72,6 @@ func (r *suscripcionRepository) GetByUserID(ctx context.Context, userID primitiv
 	return suscripciones, cursor.Err()
 }
 
-// GetAll obtiene todas las suscripciones con filtros, límite y offset
 func (r *suscripcionRepository) GetAll(ctx context.Context, filters map[string]interface{}, limit, offset int) ([]*entity.Suscripcion, error) {
 	filter := bson.M{}
 	for k, v := range filters {
@@ -106,7 +101,6 @@ func (r *suscripcionRepository) GetAll(ctx context.Context, filters map[string]i
 	return suscripciones, cursor.Err()
 }
 
-// Update actualiza una suscripción
 func (r *suscripcionRepository) Update(ctx context.Context, id primitive.ObjectID, updates map[string]interface{}) error {
 	filter := bson.M{"_id": id}
 	update := bson.M{"$set": updates}
@@ -123,7 +117,6 @@ func (r *suscripcionRepository) Update(ctx context.Context, id primitive.ObjectI
 	return nil
 }
 
-// Delete elimina una suscripción
 func (r *suscripcionRepository) Delete(ctx context.Context, id primitive.ObjectID) error {
 	filter := bson.M{"_id": id}
 
@@ -139,7 +132,6 @@ func (r *suscripcionRepository) Delete(ctx context.Context, id primitive.ObjectI
 	return nil
 }
 
-// Count cuenta suscripciones con filtros
 func (r *suscripcionRepository) Count(ctx context.Context, filters map[string]interface{}) (int64, error) {
 	filter := bson.M{}
 	for k, v := range filters {
@@ -149,7 +141,6 @@ func (r *suscripcionRepository) Count(ctx context.Context, filters map[string]in
 	return r.collection.CountDocuments(ctx, filter)
 }
 
-// GetActiveSuscripcionByUserID obtiene la suscripción activa de un usuario
 func (r *suscripcionRepository) GetActiveSuscripcionByUserID(ctx context.Context, userID primitive.ObjectID) (*entity.Suscripcion, error) {
 	filter := bson.M{
 		"usuario_id": userID,
@@ -167,7 +158,6 @@ func (r *suscripcionRepository) GetActiveSuscripcionByUserID(ctx context.Context
 	return &suscripcion, nil
 }
 
-// CountActiveSuscripcionesByPlan cuenta las suscripciones activas de un plan
 func (r *suscripcionRepository) CountActiveSuscripcionesByPlan(ctx context.Context, planID primitive.ObjectID) (int64, error) {
 	filter := bson.M{
 		"plan_id": planID,
@@ -177,16 +167,13 @@ func (r *suscripcionRepository) CountActiveSuscripcionesByPlan(ctx context.Conte
 	return r.collection.CountDocuments(ctx, filter)
 }
 
-// GetSuscripcionesWithDetails obtiene suscripciones con información de usuario y plan usando agregación
 func (r *suscripcionRepository) GetSuscripcionesWithDetails(ctx context.Context, filters map[string]interface{}, limit, offset int) ([]map[string]interface{}, error) {
 	pipeline := []bson.M{}
 
-	// Agregar filtros si existen
 	if len(filters) > 0 {
 		pipeline = append(pipeline, bson.M{"$match": filters})
 	}
 
-	// Lookup para usuario
 	pipeline = append(pipeline, bson.M{
 		"$lookup": bson.M{
 			"from":         "usuarios",
@@ -196,7 +183,6 @@ func (r *suscripcionRepository) GetSuscripcionesWithDetails(ctx context.Context,
 		},
 	})
 
-	// Lookup para plan
 	pipeline = append(pipeline, bson.M{
 		"$lookup": bson.M{
 			"from":         "planes_suscripcion",
@@ -206,14 +192,11 @@ func (r *suscripcionRepository) GetSuscripcionesWithDetails(ctx context.Context,
 		},
 	})
 
-	// Unwind para convertir arrays en objetos
 	pipeline = append(pipeline, bson.M{"$unwind": "$usuario"})
 	pipeline = append(pipeline, bson.M{"$unwind": "$plan"})
 
-	// Ordenar
 	pipeline = append(pipeline, bson.M{"$sort": bson.M{"creado_en": -1}})
 
-	// Paginación
 	pipeline = append(pipeline, bson.M{"$skip": offset})
 	pipeline = append(pipeline, bson.M{"$limit": limit})
 

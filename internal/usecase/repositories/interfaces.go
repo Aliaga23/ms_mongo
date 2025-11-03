@@ -7,7 +7,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-// UsuarioRepository define la interfaz para el repositorio de usuarios
 type UsuarioRepository interface {
 	Create(ctx context.Context, usuario *entity.Usuario) error
 	GetByID(ctx context.Context, id primitive.ObjectID) (*entity.Usuario, error)
@@ -20,7 +19,6 @@ type UsuarioRepository interface {
 	EmailExists(ctx context.Context, email string, excludeID ...primitive.ObjectID) (bool, error)
 }
 
-// PlanRepository define la interfaz para el repositorio de planes
 type PlanRepository interface {
 	Create(ctx context.Context, plan *entity.PlanSuscripcion) error
 	GetByID(ctx context.Context, id primitive.ObjectID) (*entity.PlanSuscripcion, error)
@@ -31,7 +29,6 @@ type PlanRepository interface {
 	GetActivePlans(ctx context.Context, limit, offset int) ([]*entity.PlanSuscripcion, error)
 }
 
-// SuscripcionRepository define la interfaz para el repositorio de suscripciones
 type SuscripcionRepository interface {
 	Create(ctx context.Context, suscripcion *entity.Suscripcion) error
 	GetByID(ctx context.Context, id primitive.ObjectID) (*entity.Suscripcion, error)

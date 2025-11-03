@@ -2,7 +2,6 @@ package dto
 
 import "time"
 
-// SuscripcionDTO - DTO para respuesta de suscripción
 type SuscripcionDTO struct {
 	ID          string              `json:"id"`
 	UsuarioID   string              `json:"usuario_id"`
@@ -15,7 +14,6 @@ type SuscripcionDTO struct {
 	Plan        *PlanSuscripcionDTO `json:"plan,omitempty"`
 }
 
-// CreateSuscripcionRequest - DTO para crear suscripción
 type CreateSuscripcionRequest struct {
 	UsuarioID   string `json:"usuario_id" binding:"required"`
 	PlanID      string `json:"plan_id" binding:"required"`
@@ -23,7 +21,6 @@ type CreateSuscripcionRequest struct {
 	FechaFin    string `json:"fecha_fin,omitempty"`
 }
 
-// UpdateSuscripcionRequest - DTO para actualizar suscripción
 type UpdateSuscripcionRequest struct {
 	FechaFin *string `json:"fecha_fin,omitempty"`
 	Estado   *string `json:"estado,omitempty" binding:"omitempty,oneof=activa vencida cancelada"`

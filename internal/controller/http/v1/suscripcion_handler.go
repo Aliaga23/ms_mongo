@@ -62,7 +62,6 @@ func (h *SuscripcionHandler) GetAllSuscripciones(c *gin.Context) {
 		return
 	}
 
-	// Calcular metadatos de paginación
 	totalPages := int((total + int64(limit) - 1) / int64(limit))
 	meta := dto.MetaData{
 		Page:        page,
@@ -221,7 +220,6 @@ func (h *SuscripcionHandler) GetSuscripcionesWithDetails(c *gin.Context) {
 		return
 	}
 
-	// Calcular metadatos de paginación
 	totalPages := int((total + int64(limit) - 1) / int64(limit))
 	meta := dto.MetaData{
 		Page:        page,

@@ -5,7 +5,6 @@ import (
 	"sw2p2go/internal/dto"
 )
 
-// UsuarioService define la interfaz para el servicio de usuarios
 type UsuarioService interface {
 	Register(ctx context.Context, req *dto.CreateUsuarioRequest) (*dto.UsuarioDTO, error)
 	Login(ctx context.Context, req *dto.LoginRequest) (*dto.LoginResponse, error)
@@ -18,7 +17,6 @@ type UsuarioService interface {
 	ChangePassword(ctx context.Context, userID string, req *dto.ChangePasswordRequest) error
 }
 
-// PlanService define la interfaz para el servicio de planes
 type PlanService interface {
 	CreatePlan(ctx context.Context, req *dto.CreatePlanRequest) (*dto.PlanSuscripcionDTO, error)
 	GetAllPlans(ctx context.Context, showInactive bool, limit, offset int) ([]*dto.PlanSuscripcionDTO, int64, error)
@@ -28,7 +26,6 @@ type PlanService interface {
 	GetActivePlans(ctx context.Context, limit, offset int) ([]*dto.PlanSuscripcionDTO, error)
 }
 
-// SuscripcionService define la interfaz para el servicio de suscripciones
 type SuscripcionService interface {
 	CreateSuscripcion(ctx context.Context, req *dto.CreateSuscripcionRequest) (*dto.SuscripcionDTO, error)
 	GetAllSuscripciones(ctx context.Context, limit, offset int) ([]*dto.SuscripcionDTO, int64, error)

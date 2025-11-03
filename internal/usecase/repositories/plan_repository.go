@@ -16,14 +16,12 @@ type planRepository struct {
 	collection *mongo.Collection
 }
 
-// NewPlanRepository crea una nueva instancia del repositorio de planes
 func NewPlanRepository(db *mongo.Database) PlanRepository {
 	return &planRepository{
 		collection: db.Collection("planes_suscripcion"),
 	}
 }
 
-// Create crea un nuevo plan
 func (r *planRepository) Create(ctx context.Context, plan *entity.PlanSuscripcion) error {
 	if plan.ID.IsZero() {
 		plan.ID = primitive.NewObjectID()
@@ -36,7 +34,6 @@ func (r *planRepository) Create(ctx context.Context, plan *entity.PlanSuscripcio
 	return err
 }
 
-// GetByID obtiene un plan por ID
 func (r *planRepository) GetByID(ctx context.Context, id primitive.ObjectID) (*entity.PlanSuscripcion, error) {
 	var plan entity.PlanSuscripcion
 	err := r.collection.FindOne(ctx, bson.M{"_id": id}).Decode(&plan)
@@ -49,7 +46,6 @@ func (r *planRepository) GetByID(ctx context.Context, id primitive.ObjectID) (*e
 	return &plan, nil
 }
 
-// GetAll obtiene todos los planes con filtros, límite y offset
 func (r *planRepository) GetAll(ctx context.Context, filters map[string]interface{}, limit, offset int) ([]*entity.PlanSuscripcion, error) {
 	filter := bson.M{}
 	for k, v := range filters {
@@ -79,7 +75,6 @@ func (r *planRepository) GetAll(ctx context.Context, filters map[string]interfac
 	return planes, cursor.Err()
 }
 
-// Update actualiza un plan
 func (r *planRepository) Update(ctx context.Context, id primitive.ObjectID, updates map[string]interface{}) error {
 	filter := bson.M{"_id": id}
 	update := bson.M{"$set": updates}
@@ -96,7 +91,6 @@ func (r *planRepository) Update(ctx context.Context, id primitive.ObjectID, upda
 	return nil
 }
 
-// Delete elimina un plan (soft delete)
 func (r *planRepository) Delete(ctx context.Context, id primitive.ObjectID) error {
 	filter := bson.M{"_id": id}
 	update := bson.M{"$set": bson.M{"activo": false}}
@@ -113,7 +107,6 @@ func (r *planRepository) Delete(ctx context.Context, id primitive.ObjectID) erro
 	return nil
 }
 
-// Count cuenta planes con filtros
 func (r *planRepository) Count(ctx context.Context, filters map[string]interface{}) (int64, error) {
 	filter := bson.M{}
 	for k, v := range filters {
@@ -123,7 +116,6 @@ func (r *planRepository) Count(ctx context.Context, filters map[string]interface
 	return r.collection.CountDocuments(ctx, filter)
 }
 
-// GetActivePlans obtiene solo los planes activos
 func (r *planRepository) GetActivePlans(ctx context.Context, limit, offset int) ([]*entity.PlanSuscripcion, error) {
 	filter := bson.M{"activo": true}
 

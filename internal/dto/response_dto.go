@@ -1,20 +1,17 @@
 package dto
 
-// APIResponse - Respuesta estándar de la API
 type APIResponse struct {
 	Success bool        `json:"success"`
 	Message string      `json:"message"`
 	Data    interface{} `json:"data,omitempty"`
 }
 
-// ErrorResponse - Respuesta de error
 type ErrorResponse struct {
 	Success bool   `json:"success"`
 	Message string `json:"message"`
 	Error   string `json:"error,omitempty"`
 }
 
-// PaginatedResponse - Respuesta paginada
 type PaginatedResponse struct {
 	Success bool        `json:"success"`
 	Message string      `json:"message"`
@@ -22,7 +19,6 @@ type PaginatedResponse struct {
 	Meta    MetaData    `json:"meta"`
 }
 
-// MetaData - Metadatos para paginación
 type MetaData struct {
 	Page        int   `json:"page"`
 	Limit       int   `json:"limit"`
@@ -32,7 +28,6 @@ type MetaData struct {
 	HasPrevious bool  `json:"has_previous"`
 }
 
-// NewSuccessResponse crea una respuesta exitosa
 func NewSuccessResponse(message string, data interface{}) *APIResponse {
 	return &APIResponse{
 		Success: true,
@@ -41,7 +36,6 @@ func NewSuccessResponse(message string, data interface{}) *APIResponse {
 	}
 }
 
-// NewErrorResponse crea una respuesta de error
 func NewErrorResponse(message, error string) *ErrorResponse {
 	return &ErrorResponse{
 		Success: false,

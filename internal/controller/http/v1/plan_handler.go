@@ -55,7 +55,6 @@ func (h *PlanHandler) GetAllPlanes(c *gin.Context) {
 		return
 	}
 
-	// Calcular metadatos de paginación
 	totalPages := int((total + int64(limit) - 1) / int64(limit))
 	meta := dto.MetaData{
 		Page:        page,

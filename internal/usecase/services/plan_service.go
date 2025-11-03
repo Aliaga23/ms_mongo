@@ -17,7 +17,6 @@ type planService struct {
 	suscripcionRepo repositories.SuscripcionRepository
 }
 
-// NewPlanService crea una nueva instancia del servicio de planes
 func NewPlanService(planRepo repositories.PlanRepository, suscripcionRepo repositories.SuscripcionRepository) PlanService {
 	return &planService{
 		planRepo:        planRepo,
@@ -25,13 +24,10 @@ func NewPlanService(planRepo repositories.PlanRepository, suscripcionRepo reposi
 	}
 }
 
-// CreatePlan crea un nuevo plan
 func (s *planService) CreatePlan(ctx context.Context, req *dto.CreatePlanRequest) (*dto.PlanSuscripcionDTO, error) {
-	// Normalizar datos
 	req.Nombre = strings.TrimSpace(req.Nombre)
 	req.Descripcion = strings.TrimSpace(req.Descripcion)
 
-	// Crear entidad plan
 	plan := &entity.PlanSuscripcion{
 		Nombre:      req.Nombre,
 		Descripcion: req.Descripcion,
@@ -40,16 +36,13 @@ func (s *planService) CreatePlan(ctx context.Context, req *dto.CreatePlanRequest
 		CreadoEn:    time.Now(),
 	}
 
-	// Guardar en base de datos
 	if err := s.planRepo.Create(ctx, plan); err != nil {
 		return nil, err
 	}
 
-	// Convertir a DTO
 	return s.entityToDTO(plan), nil
 }
 
-// GetAllPlans obtiene todos los planes con filtros y paginación
 func (s *planService) GetAllPlans(ctx context.Context, showInactive bool, limit, offset int) ([]*dto.PlanSuscripcionDTO, int64, error) {
 	filters := make(map[string]interface{})
 	if !showInactive {
@@ -61,13 +54,11 @@ func (s *planService) GetAllPlans(ctx context.Context, showInactive bool, limit,
 		return nil, 0, err
 	}
 
-	// Contar total
 	total, err := s.planRepo.Count(ctx, filters)
 	if err != nil {
 		return nil, 0, err
 	}
 
-	// Convertir a DTOs
 	var dtos []*dto.PlanSuscripcionDTO
 	for _, plan := range planes {
 		dtos = append(dtos, s.entityToDTO(plan))
@@ -76,7 +67,6 @@ func (s *planService) GetAllPlans(ctx context.Context, showInactive bool, limit,
 	return dtos, total, nil
 }
 
-// GetPlanByID obtiene un plan por ID
 func (s *planService) GetPlanByID(ctx context.Context, id string) (*dto.PlanSuscripcionDTO, error) {
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -91,7 +81,6 @@ func (s *planService) GetPlanByID(ctx context.Context, id string) (*dto.PlanSusc
 	return s.entityToDTO(plan), nil
 }
 
-// UpdatePlan actualiza un plan
 func (s *planService) UpdatePlan(ctx context.Context, id string, req *dto.UpdatePlanRequest) error {
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -125,14 +114,12 @@ func (s *planService) UpdatePlan(ctx context.Context, id string, req *dto.Update
 	return s.planRepo.Update(ctx, objectID, updates)
 }
 
-// DeletePlan elimina un plan (soft delete)
 func (s *planService) DeletePlan(ctx context.Context, id string) error {
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return errors.New("ID de plan inválido")
 	}
 
-	// Verificar si hay suscripciones activas
 	activeCount, err := s.suscripcionRepo.CountActiveSuscripcionesByPlan(ctx, objectID)
 	if err != nil {
 		return err
@@ -145,14 +132,12 @@ func (s *planService) DeletePlan(ctx context.Context, id string) error {
 	return s.planRepo.Delete(ctx, objectID)
 }
 
-// GetActivePlans obtiene solo los planes activos
 func (s *planService) GetActivePlans(ctx context.Context, limit, offset int) ([]*dto.PlanSuscripcionDTO, error) {
 	planes, err := s.planRepo.GetActivePlans(ctx, limit, offset)
 	if err != nil {
 		return nil, err
 	}
 
-	// Convertir a DTOs
 	var dtos []*dto.PlanSuscripcionDTO
 	for _, plan := range planes {
 		dtos = append(dtos, s.entityToDTO(plan))
@@ -161,7 +146,6 @@ func (s *planService) GetActivePlans(ctx context.Context, limit, offset int) ([]
 	return dtos, nil
 }
 
-// entityToDTO convierte una entidad PlanSuscripcion a DTO
 func (s *planService) entityToDTO(plan *entity.PlanSuscripcion) *dto.PlanSuscripcionDTO {
 	return &dto.PlanSuscripcionDTO{
 		ID:          plan.ID.Hex(),
