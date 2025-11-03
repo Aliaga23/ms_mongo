@@ -8,6 +8,7 @@ type UsuarioDTO struct {
 	Email    string    `json:"email"`
 	Telefono string    `json:"telefono"`
 	Estado   bool      `json:"estado"`
+	EsAdmin  bool      `json:"es_admin"`
 	CreadoEn time.Time `json:"creado_en"`
 }
 

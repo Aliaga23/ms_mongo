@@ -11,8 +11,9 @@ type Usuario struct {
 	Nombre   string             `bson:"nombre" json:"nombre"`
 	Email    string             `bson:"email" json:"email"`
 	Telefono string             `bson:"telefono" json:"telefono"`
-	Password string             `bson:"password" json:"-"` // No incluir en JSON
+	Password string             `bson:"password" json:"-"`
 	Estado   bool               `bson:"estado" json:"estado"`
+	EsAdmin  bool               `bson:"es_admin" json:"es_admin"`
 	CreadoEn time.Time          `bson:"creado_en" json:"creado_en"`
 }
 

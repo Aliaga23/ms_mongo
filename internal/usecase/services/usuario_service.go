@@ -224,10 +224,11 @@ func (s *usuarioService) ChangePassword(ctx context.Context, userID string, req 
 
 func (s *usuarioService) generateJWT(usuario *entity.Usuario) (string, error) {
 	claims := jwt.MapClaims{
-		"user_id": usuario.ID.Hex(),
-		"email":   usuario.Email,
-		"exp":     time.Now().Add(24 * time.Hour).Unix(),
-		"iat":     time.Now().Unix(),
+		"user_id":  usuario.ID.Hex(),
+		"email":    usuario.Email,
+		"es_admin": usuario.EsAdmin,
+		"exp":      time.Now().Add(24 * time.Hour).Unix(),
+		"iat":      time.Now().Unix(),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -241,6 +242,7 @@ func (s *usuarioService) entityToDTO(usuario *entity.Usuario) *dto.UsuarioDTO {
 		Email:    usuario.Email,
 		Telefono: usuario.Telefono,
 		Estado:   usuario.Estado,
+		EsAdmin:  usuario.EsAdmin,
 		CreadoEn: usuario.CreadoEn,
 	}
 }
