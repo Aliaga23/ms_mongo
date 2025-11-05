@@ -40,7 +40,7 @@ func (r *Router) SetupRoutes() *gin.Engine {
 	})
 
 	v1 := router.Group("/api/v1")
-
+	///usar el token con cuidau
 	auth := v1.Group("/auth")
 	{
 		auth.POST("/register", r.usuarioHandler.Register)
