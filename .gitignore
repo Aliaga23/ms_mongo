@@ -21,6 +21,9 @@ vendor/
 .env.test.local
 .env.production.local
 
+# Secrets de Kubernetes
+k8s/usuarios-secret.yaml
+
 # Logs
 *.log
 logs/
@@ -68,3 +71,4 @@ docs/
 *.pem
 *.crt
 *.p12
+k8s/usuarios-secret.yaml
