@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: usuarios
-        image: 528961352146.dkr.ecr.us-east-1.amazonaws.com/usuario_microgo:latest
+        image: 528961352146.dkr.ecr.us-east-1.amazonaws.com/usuario_microgo:swagger
         ports:
         - containerPort: 8080
         envFrom:

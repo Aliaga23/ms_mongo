@@ -1,8 +1,11 @@
 package config
 
 import (
+	"log"
 	"os"
 	"time"
+
+	"github.com/joho/godotenv"
 )
 
 type (
@@ -18,6 +21,11 @@ type (
 )
 
 func NewConfig() (*Config, error) {
+	// Cargar archivo .env si existe
+	if err := godotenv.Load(); err != nil {
+		log.Println("No se encontró archivo .env, usando variables de entorno del sistema")
+	}
+
 	cfg := &Config{
 		AppName:       os.Getenv("APP_NAME"),
 		AppVersion:    os.Getenv("APP_VERSION"),

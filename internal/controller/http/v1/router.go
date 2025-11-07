@@ -3,7 +3,11 @@ package v1
 import (
 	"sw2p2go/internal/middleware"
 
+	_ "sw2p2go/docs"
+
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 type Router struct {
@@ -35,11 +39,22 @@ func (r *Router) SetupRoutes() *gin.Engine {
 	router.Use(gin.Recovery())
 	router.Use(r.authMiddleware.CORS())
 
+	// Health Check godoc
+	// @Summary      Health Check
+	// @Description  Verifica que la API esté funcionando
+	// @Tags         System
+	// @Accept       json
+	// @Produce      json
+	// @Success      200  {object}  map[string]string
+	// @Router       /health [get]
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "OK", "message": "API is running"})
 	})
 
 	v1 := router.Group("/api/v1")
+
+	// Swagger endpoint en /api/v1/docs
+	v1.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	///usar el token con cuidau y es /perfil porsi
 	auth := v1.Group("/auth")
 	{

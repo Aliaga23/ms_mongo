@@ -19,6 +19,18 @@ func NewUsuarioHandler(usuarioService services.UsuarioService) *UsuarioHandler {
 	}
 }
 
+// Register godoc
+// @Summary      Registrar nuevo usuario
+// @Description  Crea una nueva cuenta de usuario en el sistema
+// @Tags         Authentication
+// @Accept       json
+// @Produce      json
+// @Param        request body dto.CreateUsuarioRequest true "Datos del usuario"
+// @Success      201  {object}  dto.APIResponse
+// @Failure      400  {object}  dto.ErrorResponse
+// @Failure      409  {object}  dto.ErrorResponse
+// @Failure      500  {object}  dto.ErrorResponse
+// @Router       /auth/register [post]
 func (h *UsuarioHandler) Register(c *gin.Context) {
 	var req dto.CreateUsuarioRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -39,6 +51,18 @@ func (h *UsuarioHandler) Register(c *gin.Context) {
 	c.JSON(http.StatusCreated, dto.NewSuccessResponse("Usuario registrado exitosamente", usuario))
 }
 
+// Login godoc
+// @Summary      Iniciar sesión
+// @Description  Autentica un usuario y devuelve un token JWT
+// @Tags         Authentication
+// @Accept       json
+// @Produce      json
+// @Param        request body dto.LoginRequest true "Credenciales del usuario"
+// @Success      200  {object}  dto.APIResponse
+// @Failure      400  {object}  dto.ErrorResponse
+// @Failure      401  {object}  dto.ErrorResponse
+// @Failure      500  {object}  dto.ErrorResponse
+// @Router       /auth/login [post]
 func (h *UsuarioHandler) Login(c *gin.Context) {
 	var req dto.LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -55,6 +79,18 @@ func (h *UsuarioHandler) Login(c *gin.Context) {
 	c.JSON(http.StatusOK, dto.NewSuccessResponse("Login exitoso", response))
 }
 
+// GetProfile godoc
+// @Summary      Obtener perfil de usuario
+// @Description  Obtiene el perfil del usuario autenticado
+// @Tags         Users
+// @Accept       json
+// @Produce      json
+// @Security     BearerAuth
+// @Success      200  {object}  dto.APIResponse
+// @Failure      401  {object}  dto.ErrorResponse
+// @Failure      404  {object}  dto.ErrorResponse
+// @Failure      500  {object}  dto.ErrorResponse
+// @Router       /perfil [get]
 func (h *UsuarioHandler) GetProfile(c *gin.Context) {
 	userID := c.GetString("user_id")
 	if userID == "" {
@@ -71,6 +107,17 @@ func (h *UsuarioHandler) GetProfile(c *gin.Context) {
 	c.JSON(http.StatusOK, dto.NewSuccessResponse("Perfil obtenido exitosamente", usuario))
 }
 
+// GetAllUsers godoc
+// @Summary      Listar todos los usuarios
+// @Description  Obtiene lista paginada de usuarios (público)
+// @Tags         Users
+// @Accept       json
+// @Produce      json
+// @Param        page   query  int  false  "Número de página"  default(1)
+// @Param        limit  query  int  false  "Elementos por página"  default(10)
+// @Success      200  {object}  dto.PaginatedResponse
+// @Failure      500  {object}  dto.ErrorResponse
+// @Router       /usuarios [get]
 func (h *UsuarioHandler) GetAllUsers(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
