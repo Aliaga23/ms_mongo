@@ -11,3 +11,8 @@ vendor/
 *.log
 tmp/
 dist/
+.git
+.gitignore
+README.md
+k8s/
+bin/
