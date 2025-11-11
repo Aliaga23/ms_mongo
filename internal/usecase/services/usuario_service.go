@@ -39,7 +39,7 @@ func (s *usuarioService) Register(ctx context.Context, req *dto.CreateUsuarioReq
 		return nil, errors.New("el email ya está registrado")
 	}
 
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), 8) // Reducido de 10 a 8 para mejor performance
 	if err != nil {
 		return nil, err
 	}
@@ -50,6 +50,7 @@ func (s *usuarioService) Register(ctx context.Context, req *dto.CreateUsuarioReq
 		Telefono: req.Telefono,
 		Password: string(hashedPassword),
 		Estado:   true,
+		EsAdmin:  req.EsAdmin, // Usar el valor del request
 	}
 
 	if err := s.userRepo.Create(ctx, usuario); err != nil {

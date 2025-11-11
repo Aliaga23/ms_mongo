@@ -17,6 +17,7 @@ type CreateUsuarioRequest struct {
 	Email    string `json:"email" binding:"required,email"`
 	Telefono string `json:"telefono" binding:"max=20"`
 	Password string `json:"password" binding:"required,min=6"`
+	EsAdmin  bool   `json:"es_admin"` // Opcional, default false
 }
 
 type LoginRequest struct {

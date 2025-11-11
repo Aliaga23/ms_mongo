@@ -46,7 +46,10 @@ func (a *App) initDatabase() error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	clientOptions := options.Client().ApplyURI(a.config.DatabaseURI)
+	clientOptions := options.Client().ApplyURI(a.config.DatabaseURI).
+		SetMaxPoolSize(100).                 // Pool de 100 conexiones
+		SetMinPoolSize(10).                  // Mínimo 10 conexiones activas
+		SetMaxConnIdleTime(time.Second * 30) // 30 segundos idle
 
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
